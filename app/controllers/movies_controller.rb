@@ -9,7 +9,7 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.all_ratings
-    @movies = Movie.order(sort_column + " " + sort_direction)
+    @movies = Movie.order(params[:sort])
   end
   
   def new
@@ -38,16 +38,6 @@ class MoviesController < ApplicationController
     @movie.destroy
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
-  end
-  
-  private
-  
-  def sort_column
-    Movie.column_names.include?(params[:sort]) ? params[:sort] : "title"
-  end
-  
-  def sort_direction
-    %w[asc desc].include?(params[:direction]) ? params[:direction]: "asc"
   end
 
 end
