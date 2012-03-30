@@ -9,7 +9,7 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.all_ratings
-    if !params.has_key?(:ratings) && !session.nil? && session[:remembered_params].has_key?(:ratings)
+    if (!params.nil? || !params.has_key?(:ratings)) && !session.nil? && session[:remembered_params].has_key?(:ratings)
       redirect_to movies_path(@movie, session[:remembered_params])
     end
     session[:remembered_params] = params
