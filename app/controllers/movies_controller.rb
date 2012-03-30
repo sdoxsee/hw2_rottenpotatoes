@@ -9,7 +9,17 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.all_ratings
-    @movies = Movie.order(params[:sort])
+    chosen_ratings = []
+    # if params[:ratings] == nil
+      # chosen_ratings = @all_ratings
+    # else
+      params[:ratings].each do |a|
+        chosen_ratings << a[0]
+      end
+    # end
+    @movies = Movie.
+    where(:rating => chosen_ratings).
+    order(params[:sort])
   end
   
   def new
