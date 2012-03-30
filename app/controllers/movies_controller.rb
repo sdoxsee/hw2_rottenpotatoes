@@ -1,5 +1,5 @@
 class MoviesController < ApplicationController
-  helper_method :sort_column, :sort_direction
+  helper_method :sort_column, :selected_ratings
 
   def show
     id = params[:id] # retrieve movie ID from URI route
@@ -9,17 +9,9 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.all_ratings
-    chosen_ratings = []
-    if params[:ratings] == nil
-      chosen_ratings = @all_ratings
-    else
-      params[:ratings].each do |a|
-        chosen_ratings << a[0]
-      end
-    end
     @movies = Movie.
-    where(:rating => chosen_ratings).
-    order(params[:sort])
+      where(:rating => selected_ratings).
+      order(sort_column)
   end
   
   def new
@@ -48,6 +40,29 @@ class MoviesController < ApplicationController
     @movie.destroy
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
+  end
+  
+  private
+  
+  def sort_column
+    # Movie's 'title' is default sort column
+    Movie.column_names.include?(params[:sort]) ? params[:sort] : "title"
+  end
+  
+  def selected_ratings
+    chosen_ratings = []
+    if params[:ratings].nil?
+      chosen_ratings = Movie.all_ratings
+    else
+      params[:ratings].each do |a| 
+        chosen_ratings << a[0]
+      end
+    end
+    logger.info "ratings params"
+    logger.info params[:ratings]
+    logger.info "ratings"
+    logger.info chosen_ratings
+    chosen_ratings
   end
 
 end
