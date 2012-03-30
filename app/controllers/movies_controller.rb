@@ -9,6 +9,10 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.all_ratings
+    if !params.has_key?(:ratings)
+      redirect_to movies_path(@movie, session[:remembered_params])
+    end
+    session[:remembered_params] = params
     @movies = Movie.
       where(:rating => selected_ratings).
       order(sort_column)
@@ -58,10 +62,6 @@ class MoviesController < ApplicationController
         chosen_ratings << a[0]
       end
     end
-    logger.info "ratings params"
-    logger.info params[:ratings]
-    logger.info "ratings"
-    logger.info chosen_ratings
     chosen_ratings
   end
 
