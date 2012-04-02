@@ -9,10 +9,15 @@ class MoviesController < ApplicationController
 
   def index
     @all_ratings = Movie.all_ratings
-    # if (params.nil? || !params.has_key?(:ratings)) && !session.nil? && session[:remembered_params].has_key?(:ratings)
-      # redirect_to movies_path(@movie, session[:remembered_params])
-    # end
-    logger.info session[:remembered_params]
+    if (params.nil? || !params.has_key?(:ratings)) && !session[:remembered_params].nil? && session[:remembered_params].has_key?(:ratings)
+      redirect_to movies_path(@movie, session[:remembered_params])
+    end
+    # logger.info params.has_key?(:ratings) ? "true" : "false";
+    # logger.info params.has_key?(:sort) ? "true" : "false";
+    # logger.info "SPLIT"
+    # logger.info session[:remembered_params].has_key?(:ratings) ? "true" : "false";
+    # logger.info session[:remembered_params].has_key?(:sort) ? "true" : "false";
+    # logger.info session[:remembered_params]
     session[:remembered_params] = params
     @movies = Movie.
       where(:rating => selected_ratings).
